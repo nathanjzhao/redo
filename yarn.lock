@@ -1054,6 +1054,8 @@ __metadata:
 "backend@workspace:apps/backend":
   version: 0.0.0-use.local
   resolution: "backend@workspace:apps/backend"
+  dependencies:
+    nodemon: "npm:^2.0.19"
   languageName: unknown
   linkType: soft
 
@@ -3397,20 +3399,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"market-simulator@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "market-simulator@workspace:."
-  dependencies:
-    "@commitlint/cli": "npm:^17.4.4"
-    "@commitlint/config-conventional": "npm:^17.4.4"
-    commitlint-plugin-function-rules: "npm:^1.7.1"
-    env-cmd: "npm:^10.1.0"
-    husky: "npm:^8.0.0"
-    nodemon: "npm:^2.0.19"
-    prettier: "npm:^2.5.1"
-  languageName: unknown
-  linkType: soft
-
 "meow@npm:^8.0.0, meow@npm:^8.1.2":
   version: 8.1.2
   resolution: "meow@npm:8.1.2"
@@ -5045,6 +5033,20 @@ __metadata:
   checksum: 10c0/a5eca3eb50bc11552d453488344e6507156b9193efd7635e98e867fab275d527af53d8866e2370cd09dfe74378a18111622ace35af6a608e5223a7d27fe99537
   languageName: node
   linkType: hard
+
+"template@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "template@workspace:."
+  dependencies:
+    "@commitlint/cli": "npm:^17.4.4"
+    "@commitlint/config-conventional": "npm:^17.4.4"
+    commitlint-plugin-function-rules: "npm:^1.7.1"
+    env-cmd: "npm:^10.1.0"
+    husky: "npm:^8.0.0"
+    nodemon: "npm:^2.0.19"
+    prettier: "npm:^2.5.1"
+  languageName: unknown
+  linkType: soft
 
 "text-extensions@npm:^1.0.0":
   version: 1.9.0
