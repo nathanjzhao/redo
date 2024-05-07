@@ -1,0 +1,10 @@
+{
+  "restartable": "rs",
+  "quiet": true,
+  "exec": "./start.sh",
+  "env": {
+    "PYTHON_ENV": "venv"
+  },
+  "watch": ["*.py"],
+  "ext": "py"
+}
