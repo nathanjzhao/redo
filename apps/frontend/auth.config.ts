@@ -6,7 +6,9 @@ const authConfig = {
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID ?? '',
-      clientSecret: process.env.GITHUB_SECRET ?? ''
+      clientSecret: process.env.GITHUB_SECRET ?? '',
+      redirectUri: `${process.env.NEXTAUTH_URL}/api/auth/callback/github`
+      // Set Github Authorization callback URL to http://localhost:3000/api/auth/callback/github
     }),
   ],
   pages: {
@@ -18,7 +20,10 @@ const authConfig = {
       if (account?.provider === 'github') {
         try {
           // Make a request to your FastAPI backend to store the user
-          const response = await fetch('http://your-fastapi-backend.com/register/github', {
+          console.log("user", user);
+          console.log("account", account);
+          console.log("profile", profile);
+          const response = await fetch(`${process.env.BACKEND_URL}/register/github`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
