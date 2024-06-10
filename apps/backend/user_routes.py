@@ -55,3 +55,29 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
         data={"sub": user.username}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
+
+@router.post('/register/github')
+async def register_github_user(user_data: dict, db: Session = Depends(get_db)):
+    # Extract the necessary data from the user_data dictionary
+    username = user_data.get('username')
+    email = user_data.get('email')
+    github_id = user_data.get('github_id')
+
+    # Check if the user already exists in the database
+    existing_user = db.query(User).filter(
+        (User.username == username) | (User.email == email) | (User.github_id == github_id)
+    ).first()
+
+    if existing_user:
+        # User already exists, handle accordingly
+        return {'message': 'User already exists'}
+
+    # Create a new user instance
+    new_user = User(username=username, email=email, github_id=github_id)
+
+    # Add the new user to the database
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+
+    return {'message': 'User registered successfully'}

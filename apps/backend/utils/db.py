@@ -20,15 +20,17 @@ Base = declarative_base()
 class User(Base):
     __tablename__ = 'users'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True)
-    email = Column(String, unique=True)
-    password = Column(String)
+    email = Column(String, unique=True, index=True)
+    password_hash = Column(String, nullable=True)  # Only required for Credentials provider
+    github_id = Column(String, unique=True, index=True, nullable=True)
     api_keys = relationship("ApiKey", back_populates="user")
-
+    
+    # Add any other necessary columns for user data
+    
     def __repr__(self):
-        return "<User(username='%s')>" % (
-                           self.username)
+        return f"User(id={self.id}, username='{self.username}', email='{self.email}')"
 
 class ApiKey(Base):
     __tablename__ = 'api_keys'
