@@ -1,1 +1,1 @@
-Template Repository for projects!
+Set .env variables
