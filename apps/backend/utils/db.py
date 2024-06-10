@@ -1,6 +1,6 @@
 from decimal import ROUND_DOWN, Decimal
-from sqlalchemy import create_engine, text, Column, Integer, String
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine, text, Column, Integer, String, ForeignKey
+from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.declarative import declarative_base
 from pydantic import BaseModel, validator
@@ -15,18 +15,29 @@ SQLALCHEMY_DATABASE_URL = os.getenv("SQLALCHEMY_DATABASE_URL")
 engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-Base = declarative_base()
-    
-class User(Base):
-    __tablename__ = "users"
+Base = declarative_base()    
 
-    id = Column(Integer, primary_key=True, index=True)
+class User(Base):
+    __tablename__ = 'users'
+
+    id = Column(Integer, primary_key=True)
     username = Column(String, unique=True, index=True)
+    email = Column(String, unique=True)
     password = Column(String)
+    api_keys = relationship("ApiKey", back_populates="user")
 
     def __repr__(self):
         return "<User(username='%s')>" % (
                            self.username)
+
+class ApiKey(Base):
+    __tablename__ = 'api_keys'
+
+    id = Column(Integer, primary_key=True)
+    key = Column(String, unique=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship("User", back_populates="api_keys")
+
 
 def get_db():
     db = SessionLocal()

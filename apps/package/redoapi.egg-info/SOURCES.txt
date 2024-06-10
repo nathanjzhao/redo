@@ -1,0 +1,6 @@
+setup.py
+redoapi.egg-info/PKG-INFO
+redoapi.egg-info/SOURCES.txt
+redoapi.egg-info/dependency_links.txt
+redoapi.egg-info/requires.txt
+redoapi.egg-info/top_level.txt
