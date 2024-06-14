@@ -6,6 +6,7 @@ import NextTopLoader from 'nextjs-toploader';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { auth } from '@/auth';
+import "@stripe/stripe-js";
 
 const inter = Inter({ subsets: ['latin'] });
 

@@ -23,7 +23,7 @@ const authConfig = {
           console.log("user", user);
           console.log("account", account);
           console.log("profile", profile);
-          const response = await fetch(`${process.env.BACKEND_URL}/register/github`, {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/register/github`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -31,6 +31,9 @@ const authConfig = {
             body: JSON.stringify({
               username: profile.login,
               email: profile.email || user.email,
+              name: profile.name | user.name,
+              image: profile.image || user.image,
+              github_id: profile.node_id,
               // Include any other necessary user data
             }),
           });
@@ -53,6 +56,25 @@ const authConfig = {
       // Implement your logic to store the user in the database
 
       return true; // Allow the sign-in process to continue
+    },
+    // The `session` calback defines JWT tokens to be used in session
+    async session({ session, token, user }) {
+      session.userId = token.id;
+      session.accessToken = token.accessToken;
+      session.nodeId = token.node_id;
+      return session;
+    },
+    async jwt({ token, user, account, profile, isNewUser }) {
+      if (user) {
+        token.id = user.id;
+      }
+      if (account) {
+        token.accessToken = account.access_token;
+      }
+      if (profile) {
+        token.node_id = profile.node_id;
+      }
+      return token;
     },
   },
 } satisfies NextAuthConfig;

@@ -22,10 +22,15 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True)
+    name = Column(String)
+    image = Column(String)
     email = Column(String, unique=True, index=True)
-    password_hash = Column(String, nullable=True)  # Only required for Credentials provider
     github_id = Column(String, unique=True, index=True, nullable=True)
+    stripe_customer_id = Column(String, unique=True, nullable=True)  
     api_keys = relationship("ApiKey", back_populates="user")
+
+    # unused for now
+    password_hash = Column(String, nullable=True)  # Only required for Credentials provider
     
     # Add any other necessary columns for user data
     

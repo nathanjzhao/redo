@@ -4,18 +4,22 @@ from pydantic import BaseModel
 import logging
 import requests
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Request
 from sqlalchemy.orm import Session
 
+from backend.utils.auth import get_current_user
 from backend.utils.db import ApiKey, User, get_db, Base, engine
 from backend.utils.billing import stripe_charge
 from backend.user_routes import router as user_router
+import stripe
 
 import secrets
 
 # instantiate the API
 app = FastAPI()
 app.include_router(user_router)
+
+stripe.api_key = 'your-stripe-secret-key'
 
 origins = [
     "http://localhost:3000",  # Allow frontend origin during development
@@ -99,3 +103,50 @@ async def create_api_key(user_id: int, db: Session = Depends(get_db)):
     db.commit()
 
     return {"api_key": new_api_key}
+
+
+
+class Customer(BaseModel):
+    customerId: str
+
+@app.post("/stripe/get-payment-methods")
+async def get_payment_methods(current_user: User = Depends(get_current_user)):
+    try:
+        # Retrieve the payment methods for the customer
+        payment_methods = stripe.PaymentMethod.list(
+            customer=customer.customerId,
+            type="card",
+        )
+        return {"payment_methods": payment_methods["data"]}
+    except Exception as e:
+        return {"error": str(e)}
+    
+
+class PaymentMethod(BaseModel):
+    paymentMethod: str
+
+@app.post("/stripe/attach-payment-method")
+async def attach_payment_methods(request: Request, current_user: User = Depends(get_current_user)):
+    data = await request.json()
+    print(data)
+    pass
+    try:
+        # Create a customer in Stripe
+        customer = stripe.Customer.create(
+            email=current_user.email,
+            name=current_user.name,
+        )
+
+        # Attach the payment method to the customer
+        stripe.PaymentMethod.attach(
+            paymentMethod.paymentMethodId,
+            customer=customer.id,
+        )
+
+        # Save the customer ID to the user in the database
+        current_user.stripe_customer_id = customer.id
+        current_user.save()
+
+        return {"message": "Payment method attached to customer"}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))

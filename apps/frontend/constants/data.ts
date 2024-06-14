@@ -9,6 +9,7 @@ export type User = {
   verified: boolean;
   status: string;
 };
+
 export const users: User[] = [
   {
     id: 1,
@@ -122,7 +123,19 @@ export const navItems: NavItem[] = [
     title: 'User',
     href: '/dashboard/user',
     icon: 'user',
-    label: 'user'
+    label: 'User'
+  },
+  {
+    title: 'Billing',
+    href: '/dashboard/billing',
+    icon: 'billing',
+    label: 'Billing'
+  },
+  {
+    title: 'API Keys',
+    href: '/dashboard/api-keys',
+    icon: 'apiKeys',
+    label: 'API Keys'
   },
   // {
   //   title: 'Login',

@@ -62,6 +62,8 @@ async def register_github_user(user_data: dict, db: Session = Depends(get_db)):
     username = user_data.get('username')
     email = user_data.get('email')
     github_id = user_data.get('github_id')
+    name = user_data.get('name')
+    image = user_data.get('image')
 
     # Check if the user already exists in the database
     existing_user = db.query(User).filter(
@@ -73,7 +75,7 @@ async def register_github_user(user_data: dict, db: Session = Depends(get_db)):
         return {'message': 'User already exists'}
 
     # Create a new user instance
-    new_user = User(username=username, email=email, github_id=github_id)
+    new_user = User(username=username, email=email, github_id=github_id, name=name, image=image)
 
     # Add the new user to the database
     db.add(new_user)

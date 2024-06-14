@@ -8,7 +8,7 @@ export default function page() {
     <>
       <div className="flex-1 space-y-4  p-4 pt-6 md:p-8">
         <BreadCrumb items={breadcrumbItems} />
-        <UserClient data={users} />
+        {/* <UserClient data={users} /> */}
       </div>
     </>
   );

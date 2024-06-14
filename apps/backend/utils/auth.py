@@ -1,4 +1,6 @@
 from datetime import datetime, timedelta
+
+import requests
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, HTTPBasic, HTTPBasicCredentials
 from jose import jwt, JWTError
@@ -47,14 +49,34 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
-    try:
-        payload = jwt.decode(token, str(JWT_SECRET_KEY), algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
+
+    # Check if the token is a GitHub access token
+    if token.startswith("gho_"):
+
+        # Send a request to the GitHub user endpoint with the access token
+        response = requests.get(
+            "https://api.github.com/user",
+            headers={"Authorization": f"Bearer {token}"},
+        )
+
+        # If the request was successful, the access token is valid
+        if response.status_code == 200:
+            user_data = response.json()
+            user = db.query(User).filter(User.github_id == user_data['node_id']).first()
+            print(user)
+            return user
+        else:
             raise credentials_exception
-    except JWTError:
-        raise credentials_exception
-    user = db.query(User).filter(User.username == username).first()
-    if user is None:
-        raise credentials_exception
-    return user
+    else:
+        # normal JWT token validation
+        try:
+            payload = jwt.decode(token, str(JWT_SECRET_KEY), algorithms=[ALGORITHM])
+            username: str = payload.get("sub")
+            if username is None:
+                raise credentials_exception
+        except JWTError:
+            raise credentials_exception
+        user = db.query(User).filter(User.username == username).first()
+        if user is None:
+            raise credentials_exception
+        return user
