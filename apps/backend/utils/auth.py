@@ -50,6 +50,15 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         headers={"WWW-Authenticate": "Bearer"},
     )
 
+    # If this is to be modified for other credentials, should keep in mind to change session.nodeId
+    # for unique identifiers according to the different providers
+
+    # NOTE: In the future, this token could be for the current organization, so can 
+    # create different billing plans for users vs. organizations. 
+
+    # Right now, probably as if user has a few API keys, which will probably have different pages 
+    # to view the each API key's usage. Same billing overall though
+
     # Check if the token is a GitHub access token
     if token.startswith("gho_"):
 

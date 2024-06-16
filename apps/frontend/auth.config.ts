@@ -31,7 +31,7 @@ const authConfig = {
             body: JSON.stringify({
               username: profile.login,
               email: profile.email || user.email,
-              name: profile.name | user.name,
+              name: profile.name || user.name,
               image: profile.image || user.image,
               github_id: profile.node_id,
               // Include any other necessary user data

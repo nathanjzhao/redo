@@ -43,9 +43,7 @@ export default function PaymentButtonToForm() {
       type: 'card',
       card: cardElement,
     });
-
     
-    console.log('paymentMethod', paymentMethod.id)
     if (error) {
       console.log('[error]', error);
     } else {
@@ -57,7 +55,7 @@ export default function PaymentButtonToForm() {
           'Authorization': `Bearer ${session.accessToken}`
         },
         body: JSON.stringify({
-          paymentMethodId: paymentMethod.id,
+          paymentMethod: paymentMethod,
         }),
       });
 

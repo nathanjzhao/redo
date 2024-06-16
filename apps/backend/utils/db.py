@@ -29,6 +29,11 @@ class User(Base):
     stripe_customer_id = Column(String, unique=True, nullable=True)  
     api_keys = relationship("ApiKey", back_populates="user")
 
+    # card-showing details
+    card_country = Column(String)
+    card_last4 = Column(String)
+    card_brand = Column(String)
+
     # unused for now
     password_hash = Column(String, nullable=True)  # Only required for Credentials provider
     
@@ -44,6 +49,11 @@ class ApiKey(Base):
     key = Column(String, unique=True)
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship("User", back_populates="api_keys")
+
+    # key_name = Column(String)
+    date_created = Column(String)
+    last_used = Column(String)
+    usage = Column(Integer, default=0)
 
 
 def get_db():
